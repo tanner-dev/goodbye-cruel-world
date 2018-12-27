@@ -3,28 +3,36 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "clusterPurposeName": {
-      "value": "gaming"
+      "value": "gaming",
+      "type": "string"
     },
     "clusterPurposeAbreviated": {
-      "value": "gmng"
+      "value": "gmng",
+      "type": "string"
     },
     "environment": {
-      "value": "load"
+      "value": "load",
+      "type": "string"
     },
     "clusterInstanceName": {
-      "value": "primary"
+      "value": "primary",
+      "type": "string"
     },
     "clusterInstanceAbbreviated": {
-      "value": "prmry"
+      "value": "prmry",
+      "type": "string"
     },
     "testDnsZone_Name": {
-     "value": "testDNSdeleteme.com"
+     "value": "testDNSdeleteme.com",
+      "type": "string"
     },
     "computeLocation": {
-      "value": "southcentralus"
+      "value": "southcentralus",
+      "type": "string"
     },
     "publicIPAddressType": {
-      "value": "Dynamic"
+      "value": "Dynamic",
+      "type": "string"
     }
   }
 }
