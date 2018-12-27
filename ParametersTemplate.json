@@ -18,8 +18,7 @@
       "value": "prmry"
     },
     "testDnsZone_Name": {
-     "defaultValue": "testDNSdeleteme.com",
-     "type": "string"
+     "value": "testDNSdeleteme.com"
     },
     "computeLocation": {
       "value": "southcentralus"
