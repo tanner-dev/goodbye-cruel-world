@@ -1,0 +1,31 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "clusterPurposeName": {
+      "value": "gaming"
+    },
+    "clusterPurposeAbreviated": {
+      "value": "gmng"
+    },
+    "environment": {
+      "value": "load"
+    },
+    "clusterInstanceName": {
+      "value": "primary"
+    },
+    "clusterInstanceAbbreviated": {
+      "value": "prmry"
+    },
+    "testDnsZone_Name": {
+     "defaultValue": "testDNSdeleteme.com",
+     "type": "string"
+    },
+    "computeLocation": {
+      "value": "southcentralus"
+    },
+    "publicIPAddressType": {
+      "value": "Dynamic"
+    }
+  }
+}
