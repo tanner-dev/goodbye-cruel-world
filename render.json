@@ -148,7 +148,7 @@
                 }
               }
             }
-          ],
+          ]
           //"outputs": {
           //  "nestedCnameInfo": {
           //    "type": "object",
@@ -239,10 +239,10 @@
             }
           ]
         }
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'nestedCnameTemplate')]"
-      ]
+      }
+      //"dependsOn": [
+      //  "[resourceId('Microsoft.Resources/deployments', 'nestedCnameTemplate')]"
+      //]
     },
     //
     // ORIGINAL 'sfcrndr.json' Resource are BELOW
@@ -296,33 +296,33 @@
       "properties": {},
       "dependsOn": []
     },
-    {
-      "type": "Microsoft.Network/virtualNetworks",
-      "name": "[variables('virtualNetworkName')]",
-      "apiVersion": "[variables('vNetApiVersion')]",
-      "location": "[variables('computeLocation')]",
-      "tags": {
-        "environment": "[variables('environment')]",
-        "resourceType": "Service Fabric",
-        "clusterName": "[variables('clusterName')]"
-      },
-      "properties": {
-        "addressSpace": {
-          "addressPrefixes": [
-            "[variables('addressPrefix')]"
-          ]
-        },
-        "subnets": [
-          {
-            "name": "[variables('subnet0Name')]",
-            "properties": {
-              "addressPrefix": "[variables('subnet0Prefix')]"
-            }
-          }
-        ]
-      },
-      "dependsOn": []
-    },
+    //{
+    //  "type": "Microsoft.Network/virtualNetworks",
+    //  "name": "[variables('virtualNetworkName')]",
+    //  "apiVersion": "[variables('vNetApiVersion')]",
+    //  "location": "[variables('computeLocation')]",
+    //  "tags": {
+    //    "environment": "[variables('environment')]",
+    //    "resourceType": "Service Fabric",
+    //    "clusterName": "[variables('clusterName')]"
+    //  },
+    //  "properties": {
+    //    "addressSpace": {
+    //      "addressPrefixes": [
+    //        "[variables('addressPrefix')]"
+    //      ]
+    //    },
+    //    "subnets": [
+    //      {
+    //        "name": "[variables('subnet0Name')]",
+    //        "properties": {
+    //          "addressPrefix": "[variables('subnet0Prefix')]"
+    //        }
+    //      }
+    //    ]
+    //  },
+    //  "dependsOn": []
+    //},
     {
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[variables('publicIPAddressRender0')]",
@@ -551,224 +551,224 @@
         "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressAnnotate0'))]"
       ]
     },
-    {
-      "type": "Microsoft.Compute/virtualMachineScaleSets",
-      "sku": {
-        "name": "[variables('vmNodeType0Size')]",
-        "capacity": "[variables('nt0InstanceCount')]",
-        "tier": "Standard"
-      },
-      "name": "[concat(variables('clusterName'), 'vmss', variables('vmNodeType0Name'))]",
-      "apiVersion": "[variables('vmssApiVersion')]",
-      "location": "[variables('computeLocation')]",
-      "identity": {
-        "type": "SystemAssigned"
-      },
-      "tags": {
-        "environment": "[variables('environment')]",
-        "resourceType": "Service Fabric",
-        "clusterName": "[variables('clusterName')]"
-      },
-      "properties": {
-        "overprovision": "[variables('overProvision')]",
-        "upgradePolicy": {
-          "mode": "Automatic"
-        },
-        "virtualMachineProfile": {
-          "extensionProfile": {
-            "extensions": [
-              {
-                "name": "[concat('ServiceFabricNode-', variables('vmNodeType0Name'))]",
-                "properties": {
-                  "type": "ServiceFabricNode",
-                  "autoUpgradeMinorVersion": true,
-                  "protectedSettings": {
-                    "StorageAccountKey1": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('applicationtLogStorageAccountName')),'2015-05-01-preview').key1]",
-                    "StorageAccountKey2": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('applicationtLogStorageAccountName')),'2015-05-01-preview').key2]"
-                  },
-                  "publisher": "Microsoft.Azure.ServiceFabric",
-                  "settings": {
-                    "clusterEndpoint": "[reference(variables('clusterName')).clusterEndpoint]",
-                    "nodeTypeRef": "[variables('vmNodeType0Name')]",
-                    "dataPath": "D:\\\\SvcFab",
-                    "durabilityLevel": "Silver",
-                    "enableParallelJobs": true,
-                    "nicPrefixOverride": "[variables('subnet0Prefix')]",
-                    "certificate": {
-                      "thumbprint": "[variables('managementCertificateThumbprint')]",
-                      "x509StoreName": "My"
-                    }
-                  },
-                  "typeHandlerVersion": "1.0"
-                }
-              },
-              {
-                "name": "[concat('VMDiagnosticsVmExt-', variables('vmNodeType0Name'))]",
-                "properties": {
-                  "type": "IaaSDiagnostics",
-                  "autoUpgradeMinorVersion": true,
-                  "protectedSettings": {
-                    "storageAccountName": "[variables('applicationDiagnosticsStorageAccountName')]",
-                    "storageAccountKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('applicationDiagnosticsStorageAccountName')),'2015-05-01-preview').key1]",
-                    "storageAccountEndPoint": "https://core.windows.net/"
-                  },
-                  "publisher": "Microsoft.Azure.Diagnostics",
-                  "settings": {
-                    "WadCfg": {
-                      "DiagnosticMonitorConfiguration": {
-                        "overallQuotaInMB": "50000",
-                        "sinks": "applicationInsights",
-                        "EtwProviders": {
-                          "EtwEventSourceProviderConfiguration": [
-                            {
-                              "provider": "Microsoft-ServiceFabric-Actors",
-                              "scheduledTransferKeywordFilter": "1",
-                              "scheduledTransferPeriod": "PT5M",
-                              "DefaultEvents": {
-                                "eventDestination": "ServiceFabricReliableActorEventTable"
-                              }
-                            },
-                            {
-                              "provider": "Microsoft-ServiceFabric-Services",
-                              "scheduledTransferPeriod": "PT5M",
-                              "DefaultEvents": {
-                                "eventDestination": "ServiceFabricReliableServiceEventTable"
-                              }
-                            }
-                          ],
-                          "EtwManifestProviderConfiguration": [
-                            {
-                              "provider": "cbd93bc2-71e5-4566-b3a7-595d8eeca6e8",
-                              "scheduledTransferLogLevelFilter": "Information",
-                              "scheduledTransferKeywordFilter": "4611686018427387904",
-                              "scheduledTransferPeriod": "PT5M",
-                              "DefaultEvents": {
-                                "eventDestination": "ServiceFabricSystemEventTable"
-                              }
-                            }
-                          ]
-                        }
-                      },
-                      "SinksConfig": {
-                        "Sink": [
-                          {
-                            "name": "applicationInsights",
-                            "ApplicationInsights": "[variables('applicationInsightsKey')]"
-                          }
-                        ]
-                      }
-                    },
-                    "StorageAccount": "[variables('applicationDiagnosticsStorageAccountName')]"
-                  },
-                  "typeHandlerVersion": "1.5"
-                }
-              },
-              {
-                "name": "LazloMasterScript",
-                "properties": {
-                  "autoUpgradeMinorVersion": true,
-                  "settings": {
-                    "fileUris": [
-                      "https://lazlo326.blob.core.windows.net/vmscripts/dotnet-install.ps1",
-                      "https://lazlo326.blob.core.windows.net/vmscripts/SetEnvironmentVariable.ps1",
-                      "https://lazlo326.blob.core.windows.net/vmscripts/Master.ps1"
-                    ],
-                    "commandToExecute": "[concat('powershell -NonInteractive -ExecutionPolicy Bypass -File Master.ps1 ActiveConfiguration ', variables('environment'))]"
-                  },
-                  "publisher": "Microsoft.Compute",
-                  "type": "CustomScriptExtension",
-                  "typeHandlerVersion": "1.4"
-                }
-              }
-            ]
-          },
-          "networkProfile": {
-            "networkInterfaceConfigurations": [
-              {
-                "name": "[concat(variables('nicName'), '-0')]",
-                "properties": {
-                  "ipConfigurations": [
-                    {
-                      "name": "[concat(variables('nicName'),'-',0)]",
-                      "properties": {
-                        "loadBalancerBackendAddressPools": [
-                          {
-                            "id": "[variables('lbPoolID0')]"
-                          }
-                        ],
-                        "loadBalancerInboundNatPools": [
-                          {
-                            "id": "[variables('lbNatPoolID0')]"
-                          }
-                        ],
-                        "subnet": {
-                          "id": "[variables('subnet0Ref')]"
-                        }
-                      }
-                    }
-                  ],
-                  "primary": true
-                }
-              }
-            ]
-          },
-          "osProfile": {
-            "adminUsername": "[parameters('osProfileAdminUserName')]",
-            "adminPassword": "[concat(parameters('osProfileAdminPassword'))]",
-            "computernamePrefix": "[variables('vmNodeType0Name')]",
-            "secrets": [
-              {
-                "sourceVault": {
-                  "id": "[variables('vaultId')]"
-                },
-                "vaultCertificates": [
-                  {
-                    "certificateUrl": "[variables('settingsCertificateName')]",
-                    "certificateStore": "My"
-                  },
-                  {
-                    "certificateUrl": "[variables('lazloCertificateName')]",
-                    "certificateStore": "My"
-                  }
-                ]
-              }
-            ]
-          },
-          "storageProfile": {
-            "imageReference": {
-              "publisher": "[variables('vmImagePublisher')]",
-              "offer": "[variables('vmImageOffer')]",
-              "sku": "[variables('vmImageSku')]",
-              "version": "[variables('vmImageVersion')]"
-            },
-            "osDisk": {
-              "caching": "ReadOnly",
-              "createOption": "FromImage",
-              "managedDisk": {
-                "storageAccountType": "[variables('storageAccountType')]"
-              }
-            },
-            "dataDisks": [
-              {
-                "caching": "ReadOnly",
-                "createOption": "Empty",
-                "diskSizeGB": 256,
-                "lun": 2,
-                "managedDisk": {
-                  "storageAccountType": "Standard_LRS"
-                }
-              }
-            ]
-          }
-        }
-      },
-      "dependsOn": [
-        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
-        "[concat('Microsoft.Network/loadBalancers/', variables('lbName'))]",
-        "[concat('Microsoft.Storage/storageAccounts/', variables('applicationtLogStorageAccountName'))]",
-        "[concat('Microsoft.Storage/storageAccounts/', variables('applicationDiagnosticsStorageAccountName'))]"
-      ]
-    },
+    //{
+    //  "type": "Microsoft.Compute/virtualMachineScaleSets",
+    //  "sku": {
+    //    "name": "[variables('vmNodeType0Size')]",
+    //    "capacity": "[variables('nt0InstanceCount')]",
+    //    "tier": "Standard"
+    //  },
+    //  "name": "[concat(variables('clusterName'), 'vmss', variables('vmNodeType0Name'))]",
+    //  "apiVersion": "[variables('vmssApiVersion')]",
+    //  "location": "[variables('computeLocation')]",
+    //  "identity": {
+    //    "type": "SystemAssigned"
+    //  },
+    //  "tags": {
+    //    "environment": "[variables('environment')]",
+    //    "resourceType": "Service Fabric",
+    //    "clusterName": "[variables('clusterName')]"
+    //  },
+    //  "properties": {
+    //    "overprovision": "[variables('overProvision')]",
+    //    "upgradePolicy": {
+    //      "mode": "Automatic"
+    //    },
+    //    "virtualMachineProfile": {
+    //      "extensionProfile": {
+    //        "extensions": [
+    //          {
+    //            "name": "[concat('ServiceFabricNode-', variables('vmNodeType0Name'))]",
+    //            "properties": {
+    //              "type": "ServiceFabricNode",
+    //              "autoUpgradeMinorVersion": true,
+    //              "protectedSettings": {
+    //                "StorageAccountKey1": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('applicationtLogStorageAccountName')),'2015-05-01-preview').key1]",
+    //                "StorageAccountKey2": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('applicationtLogStorageAccountName')),'2015-05-01-preview').key2]"
+    //              },
+    //              "publisher": "Microsoft.Azure.ServiceFabric",
+    //              "settings": {
+    //                "clusterEndpoint": "[reference(variables('clusterName')).clusterEndpoint]",
+    //                "nodeTypeRef": "[variables('vmNodeType0Name')]",
+    //                "dataPath": "D:\\\\SvcFab",
+    //                "durabilityLevel": "Silver",
+    //                "enableParallelJobs": true,
+    //                "nicPrefixOverride": "[variables('subnet0Prefix')]",
+    //                "certificate": {
+    //                  "thumbprint": "[variables('managementCertificateThumbprint')]",
+    //                  "x509StoreName": "My"
+    //                }
+    //              },
+    //              "typeHandlerVersion": "1.0"
+    //            }
+    //          },
+    //          {
+    //            "name": "[concat('VMDiagnosticsVmExt-', variables('vmNodeType0Name'))]",
+    //            "properties": {
+    //              "type": "IaaSDiagnostics",
+    //              "autoUpgradeMinorVersion": true,
+    //              "protectedSettings": {
+    //                "storageAccountName": "[variables('applicationDiagnosticsStorageAccountName')]",
+    //                "storageAccountKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('applicationDiagnosticsStorageAccountName')),'2015-05-01-preview').key1]",
+    //                "storageAccountEndPoint": "https://core.windows.net/"
+    //              },
+    //              "publisher": "Microsoft.Azure.Diagnostics",
+    //              "settings": {
+    //                "WadCfg": {
+    //                  "DiagnosticMonitorConfiguration": {
+    //                    "overallQuotaInMB": "50000",
+    //                    "sinks": "applicationInsights",
+    //                    "EtwProviders": {
+    //                      "EtwEventSourceProviderConfiguration": [
+    //                        {
+    //                          "provider": "Microsoft-ServiceFabric-Actors",
+    //                          "scheduledTransferKeywordFilter": "1",
+    //                          "scheduledTransferPeriod": "PT5M",
+    //                          "DefaultEvents": {
+    //                            "eventDestination": "ServiceFabricReliableActorEventTable"
+    //                          }
+    //                        },
+    //                        {
+    //                          "provider": "Microsoft-ServiceFabric-Services",
+    //                          "scheduledTransferPeriod": "PT5M",
+    //                          "DefaultEvents": {
+    //                            "eventDestination": "ServiceFabricReliableServiceEventTable"
+    //                          }
+    //                        }
+    //                      ],
+    //                      "EtwManifestProviderConfiguration": [
+    //                        {
+    //                          "provider": "cbd93bc2-71e5-4566-b3a7-595d8eeca6e8",
+    //                          "scheduledTransferLogLevelFilter": "Information",
+    //                          "scheduledTransferKeywordFilter": "4611686018427387904",
+    //                          "scheduledTransferPeriod": "PT5M",
+    //                          "DefaultEvents": {
+    //                            "eventDestination": "ServiceFabricSystemEventTable"
+    //                          }
+    //                        }
+    //                      ]
+    //                    }
+    //                  },
+    //                  "SinksConfig": {
+    //                    "Sink": [
+    //                      {
+    //                        "name": "applicationInsights",
+    //                        "ApplicationInsights": "[variables('applicationInsightsKey')]"
+    //                      }
+    //                    ]
+    //                  }
+    //                },
+    //                "StorageAccount": "[variables('applicationDiagnosticsStorageAccountName')]"
+    //              },
+    //              "typeHandlerVersion": "1.5"
+    //            }
+    //          },
+    //          {
+    //            "name": "LazloMasterScript",
+    //            "properties": {
+    //              "autoUpgradeMinorVersion": true,
+    //              "settings": {
+    //                "fileUris": [
+    //                  "https://lazlo326.blob.core.windows.net/vmscripts/dotnet-install.ps1",
+    //                  "https://lazlo326.blob.core.windows.net/vmscripts/SetEnvironmentVariable.ps1",
+    //                  "https://lazlo326.blob.core.windows.net/vmscripts/Master.ps1"
+    //                ],
+    //                "commandToExecute": "[concat('powershell -NonInteractive -ExecutionPolicy Bypass -File Master.ps1 ActiveConfiguration ', variables('environment'))]"
+    //              },
+    //              "publisher": "Microsoft.Compute",
+    //              "type": "CustomScriptExtension",
+    //              "typeHandlerVersion": "1.4"
+    //            }
+    //          }
+    //        ]
+    //      },
+    //      "networkProfile": {
+    //        "networkInterfaceConfigurations": [
+    //          {
+    //            "name": "[concat(variables('nicName'), '-0')]",
+    //            "properties": {
+    //              "ipConfigurations": [
+    //                {
+    //                  "name": "[concat(variables('nicName'),'-',0)]",
+    //                  "properties": {
+    //                    "loadBalancerBackendAddressPools": [
+    //                      {
+    //                        "id": "[variables('lbPoolID0')]"
+    //                      }
+    //                    ],
+    //                    "loadBalancerInboundNatPools": [
+    //                      {
+    //                        "id": "[variables('lbNatPoolID0')]"
+    //                      }
+    //                    ],
+    //                    "subnet": {
+    //                      "id": "[variables('subnet0Ref')]"
+    //                    }
+    //                  }
+    //                }
+    //              ],
+    //              "primary": true
+    //            }
+    //          }
+    //        ]
+    //      },
+    //      "osProfile": {
+    //        "adminUsername": "[parameters('osProfileAdminUserName')]",
+    //        "adminPassword": "[concat(parameters('osProfileAdminPassword'))]",
+    //        "computernamePrefix": "[variables('vmNodeType0Name')]",
+    //        "secrets": [
+    //          {
+    //            "sourceVault": {
+    //              "id": "[variables('vaultId')]"
+    //            },
+    //            "vaultCertificates": [
+    //              {
+    //                "certificateUrl": "[variables('settingsCertificateName')]",
+    //                "certificateStore": "My"
+    //              },
+    //              {
+    //                "certificateUrl": "[variables('lazloCertificateName')]",
+    //                "certificateStore": "My"
+    //              }
+    //            ]
+    //          }
+    //        ]
+    //      },
+    //      "storageProfile": {
+    //        "imageReference": {
+    //          "publisher": "[variables('vmImagePublisher')]",
+    //          "offer": "[variables('vmImageOffer')]",
+    //          "sku": "[variables('vmImageSku')]",
+    //          "version": "[variables('vmImageVersion')]"
+    //        },
+    //        "osDisk": {
+    //          "caching": "ReadOnly",
+    //          "createOption": "FromImage",
+    //          "managedDisk": {
+    //            "storageAccountType": "[variables('storageAccountType')]"
+    //          }
+    //        },
+    //        "dataDisks": [
+    //          {
+    //            "caching": "ReadOnly",
+    //            "createOption": "Empty",
+    //            "diskSizeGB": 256,
+    //            "lun": 2,
+    //            "managedDisk": {
+    //              "storageAccountType": "Standard_LRS"
+    //            }
+    //          }
+    //        ]
+    //      }
+    //    }
+    //  },
+    //  "dependsOn": [
+    //    "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
+    //    "[concat('Microsoft.Network/loadBalancers/', variables('lbName'))]",
+    //    "[concat('Microsoft.Storage/storageAccounts/', variables('applicationtLogStorageAccountName'))]",
+    //    "[concat('Microsoft.Storage/storageAccounts/', variables('applicationDiagnosticsStorageAccountName'))]"
+    //  ]
+    //},
     {
       "type": "Microsoft.ServiceFabric/clusters",
       "name": "[variables('clusterName')]",
@@ -835,7 +835,7 @@
     "clusterProperties": {
       "type": "object",
       "value": "[reference(variables('clusterName'))]"
-    },
+    }
     //"documentEndpoint": {
     //  "type": "string",
     //  "value": "[reference(variables('resourceId'), variables('apiVersion')).documentEndpoint]"
