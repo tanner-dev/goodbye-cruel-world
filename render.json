@@ -2,309 +2,12 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    //
-    // Choose an existing Resource Group (If Resource Group does not exist, specify name in Pipeline Variable)
-    //
-    "rgCommon": {
-      "defaultValue": "dev.common-deleteme",
+    "environmentName": {
+      "defaultValue": "deleteme.ct.dev",
       "type": "string"
     },
-    "rgRender": {
-      "defaultValue": "dev.render-deleteme",
-      "type": "string"
-    },
-    //
-    // DNS Zone *** MUST EXIST ***
-    //
-    "dnszone_name": {
-      "defaultValue": "lazlo.io.deleteme",
-      "type": "String"
-    },
-    //
-    // CNAME Array
-    //
-    //"cName": {
-    //  "defaultValue": [
-    //    { "name": "cname_deleteme001" },
-    //    { "name": "cname_deleteme002" },
-    //    { "name": "cname_deleteme003" },
-    //    { "name": "cname_deleteme004" },
-    //    { "name": "cname_deleteme005" }
-    //  ],
-    //  "type": "array"
-    //},
-    "cName": {
-      "defaultValue": "dev.render-deleteme",
-      "type": "string"
-    },
-    "subscriptionIdGuid": {
-      "defaultValue": "be4c9638-e57a-4393-a2c3-c604ccb0bb3a",
-      "type": "string"
-    },
-    "computeLocation": {
-      "defaultValue": "southcentralus",
-      "type": "string"
-    },
-    //
-    // BEGIN Traffic Manger
-    //
-    "trafficManagerName": {
-      "defaultValue": "deleteme-devrender",
-      "type": "string"
-    },
-    "relativeName": {
-      "type": "string"
-    },
-    "trafficRoutingMethod": {
-      "type": "string",
-      "defaultValue": "Performance",
-      "allowedValues": [
-        "Performance",
-        "Weighted",
-        "Priority",
-        "Geographic",
-        "MultiValue",
-        "Subnet"
-      ]
-    },
-    "maxReturn": {
-      "type": "int"
-    },
-
-    // END Traffic Manager
-
-    // BEGIN Endpoints
-
-    "endpoint_name001": {
-      "defaultValue": "dev.render.southcentralus",
-      "type": "String"
-    },
-    "endpoint_name002": {
-      "defaultValue": "dev.render.northcentralus",
-      "type": "String"
-    },
-    //"trafficManagerProfiles_name": {
-    //  "defaultValue": "deleteme",
-    //  "type": "string"
-    //},
-    "NS_@_name": {
-      "defaultValue": "@",
-      "type": "string"
-    },
-    //"publicIPAddresses_pubip001_name": {
-    //  "defaultValue": "deleteme-pubip001",
-    //  "type": "String"
-    //},
-    //"publicIPAddresses_pubip002_name": {
-    //  "defaultValue": "deleteme-pubip002",
-    //  "type": "String"
-    //},
-    "SOA_@_name": {
-      "defaultValue": "@",
-      "type": "string"
-    },
-    "trafficManagerProfiles_id": {
-      "defaultValue": "/subscriptions/be4c9638-e57a-4393-a2c3-c604ccb0bb3a/resourceGroups/deleteme-dev.common/providers/Microsoft.Network/trafficManagerProfiles/deleteme-devrender/azureEndpoints/",
-      "type": "String"
-    },
-
-    // END Endpoints
-
-    "subscriptionIdGuid": {
-      "defaultValue": "be4c9638-e57a-4393-a2c3-c604ccb0bb3a",
-      "type": "string"
-    },
-    "reliabilityLevel": {
-      "defaultValue": "Silver",
-      "type": "string",
-      "metadata": {
-        "description": "silver/platinum"
-      }
-    },
-    "clusterPurposeName": {
+    "actionName": {
       "defaultValue": "render",
-      "type": "string",
-      "metadata": {
-        "description": "render/gaming"
-      }
-    },
-    "clusterPurposeAbreviated": {
-      "defaultValue": "rndr",
-      "type": "string",
-      "metadata": {
-        "description": "rndr/gmng"
-      }
-    },
-    "environment": {
-      "defaultValue": "devrender",
-      "type": "string",
-      "metadata": {
-        "description": "devrender/loadrender/demorender/prorender"
-      }
-    },
-    "clusterInstanceName": {
-      "defaultValue": "primary",
-      "type": "string",
-      "metadata": {
-        "description": "primary/secondary"
-      }
-    },
-    "clusterInstanceAbbreviated": {
-      "defaultValue": "prmry",
-      "type": "string",
-      "metadata": {
-        "description": "prmry/scndry"
-      }
-    },
-    "clusterApplication": {
-      "defaultValue": "",
-      "type": "string",
-      "metadata": {
-        "description": "Cluster Application Id returned from keyvault application configuration"
-      }
-    },
-    "clientApplication": {
-      "defaultValue": "",
-      "type": "string",
-      "metadata": {
-        "description": "Client Application Id returned from keyvault application configuration"
-      }
-    },
-    "applicationInsightsKey": {
-      "type": "string",
-      "metadata": {
-        "description": "Application Insights Key"
-      }
-    },
-    "nt0applicationStartPort": {
-      "defaultValue": 20000,
-      "type": "int"
-    },
-    "nt0applicationEndPort": {
-      "defaultValue": 30000,
-      "type": "int"
-    },
-    "nt0ephemeralStartPort": {
-      "defaultValue": 49152,
-      "type": "int"
-    },
-    "nt0ephemeralEndPort": {
-      "defaultValue": 65534,
-      "type": "int"
-    },
-    "nt0fabricTcpGatewayPort": {
-      "defaultValue": 19000,
-      "type": "int"
-    },
-    "nt0fabricHttpGatewayPort": {
-      "defaultValue": 19080,
-      "type": "int"
-    },
-    "subnet0Prefix": {
-      "defaultValue": "10.0.0.0/24",
-      "type": "string"
-    },
-    "computeLocation": {
-      "type": "string"
-    },
-    "publicIPAddressType": {
-      "defaultValue": "Dynamic",
-      "allowedValues": [
-        "Dynamic"
-      ],
-      "type": "string"
-    },
-    "vmStorageAccountContainerName": {
-      "defaultValue": "vhds",
-      "type": "string"
-    },
-    "addressPrefix": {
-      "defaultValue": "10.0.0.0/16",
-      "type": "string"
-    },
-    "overProvision": {
-      "defaultValue": "false",
-      "type": "string"
-    },
-    "vmImagePublisher": {
-      "defaultValue": "MicrosoftWindowsServer",
-      "type": "string"
-    },
-    "vmImageOffer": {
-      "defaultValue": "WindowsServer",
-      "type": "string"
-    },
-    "vmImageSku": {
-      "defaultValue": "2016-Datacenter",
-      "type": "string"
-    },
-    "vmImageVersion": {
-      "defaultValue": "latest",
-      "type": "string"
-    },
-    "storageAccountType": {
-      "defaultValue": "Standard_LRS",
-      "allowedValues": [
-        "Standard_LRS",
-        "Premium_LRS",
-        "Standard_GRS"
-      ],
-      "type": "string",
-      "metadata": {
-        "description": "Replication option for the VM image storage account"
-      }
-    },
-    "applicationLogStorageAccountType": {
-      "defaultValue": "Premium_LRS",
-      "allowedValues": [
-        "Standard_LRS",
-        "Premium_LRS",
-        "Standard_GRS"
-      ],
-      "type": "string",
-      "metadata": {
-        "description": "Replication option for the support log storage account"
-      }
-    },
-    "applicationDiagnosticsStorageAccountType": {
-      "defaultValue": "Premium_LRS",
-      "allowedValues": [
-        "Standard_LRS",
-        "Premium_LRS",
-        "Standard_GRS"
-      ],
-      "type": "string",
-      "metadata": {
-        "description": "Replication option for the application diagnostics storage account"
-      }
-    },
-    "nt0InstanceCount": {
-      "defaultValue": 5,
-      "type": "int",
-      "metadata": {
-        "description": "Instance count for node type"
-      }
-    },
-    "vmNodeType0Name": {
-      "type": "string"
-    },
-    "vmNodeType0Size": {
-      "defaultValue": "Standard_D2_v2",
-      "type": "string"
-    },
-    "vaultName": {
-      "type": "string"
-    },
-    "vaultResourceGroup": {
-      "type": "string"
-    },
-    "settingsCertificateName": {
-      "type": "string"
-    },
-    "managementCertificateThumbprint": {
-      "type": "string"
-    },
-    "lazloCertificateName": {
       "type": "string"
     },
     "osProfileAdminUserName": {
@@ -315,13 +18,35 @@
     }
   },
   "variables": {
-    "dnsName": "[concat(parameters('clusterPurposeName'), parameters('environment'))]",
-    "clusterName": "[concat(parameters('environment'), parameters('clusterPurposeAbreviated'), parameters('clusterInstanceAbbreviated'))]",
-    "vmssApiVersion": "2017-03-30",
-    "lbApiVersion": "2015-06-15",
-    "vNetApiVersion": "2015-06-15",
-    "storageApiVersion": "2017-10-01",
-    "publicIPApiVersion": "2015-06-15",
+
+    //
+    // Choose an existing Resource Group (If Resource Group does not exist, specify name in Pipeline Variable)
+    "rgCommon": "[concat(parameters('environmentName'), '.common')]",
+    "rgMain": "[concat(parameters('environmentName'), '.render')]",
+    "rgDnsLocation": "deleteme.ct.dnszone",
+    //
+    // DNS Zone *** MUST EXIST ***
+    "dnsZone_Name": "deleteme.lazlo.io",
+    //
+    // CNAME tied to DNS Zone
+    "cName": "dev.render-deleteme",
+    //
+    // Azure Subscription GUID
+    "subscriptionIdGuid": "be4c9638-e57a-4393-a2c3-c604ccb0bb3a",
+    "computeLocation": "southcentralus",
+    // BEGIN Traffic Manager
+    "trafficManagerName": "deleteme-devrender",
+    "relativeName": "deleteme-devrender",
+    "trafficRoutingMethod": "Performance",
+    "maxReturn": 0,
+    // BEGIN Endpoints
+    "endpoint_name001": "dev.render.southcentralus",
+    "endpoint_name002": "dev.render.northcentralus",
+    // Begin Traffic Manager
+    "trafficManagerProfiles_id": "[concat('/subscriptions/', variables('subscriptionIdGuid'), '/resourceGroups/', variables('rgCommon'), '/providers/Microsoft.Network/trafficManagerProfiles/', variables('trafficManagerName'), '/azureEndpoints/')]",
+    //
+    "dnsName": "[concat(variables('clusterPurposeName'), variables('environment'))]",
+    "clusterName": "[concat(variables('environment'), variables('clusterPurposeAbreviated'), variables('clusterInstanceAbbreviated'))]",
     "applicationtLogStorageAccountName": "[concat(variables('clusterName'), 'log')]",
     "applicationDiagnosticsStorageAccountName": "[concat(variables('clusterName'), 'dgnstc')]",
     "lbName": "[concat(variables('clusterName'), 'lb')]",
@@ -336,8 +61,7 @@
     "publicIPAddressAnnotateName": "[concat(variables('clusterName'), 'annotate', 'pubip')]",
     "publicIPAddressAnnotate0": "[concat(variables('publicIPAddressAnnotateName'), '0')]",
     //
-    //
-    "dnsNameAnnotate": "[concat('annotate', parameters('environment'))]",
+    "dnsNameAnnotate": "[concat('annotate', variables('environment'))]",
     "subnet0Name": "[concat(variables('clusterName'),'Subnet', '0')]",
     "subnet0Ref": "[concat(variables('vnetID'),'/subnets/',variables('subnet0Name'))]",
     "lbID0": "[resourceId('Microsoft.Network/loadBalancers', concat(variables('lbName')))]",
@@ -347,21 +71,108 @@
     "lbHttpProbeID0": "[concat(variables('lbID0'),'/probes/FabricHttpGatewayProbe')]",
     "lbNatPoolID0": "[concat(variables('lbID0'),'/inboundNatPools/LoadBalancerBEAddressNatPool')]",
     "vmStorageAccountName0": "[toLower(concat(uniqueString(resourceGroup().id), '1', '0' ))]",
-    "vaultId": "[concat('/subscriptions/be4c9638-e57a-4393-a2c3-c604ccb0bb3a/resourceGroups/',parameters('vaultResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('vaultName'))]"
+    "vaultId": "[concat('/subscriptions/be4c9638-e57a-4393-a2c3-c604ccb0bb3a/resourceGroups/',variables('vaultResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',variables('vaultName'))]",
+    //
+    // *** HARD CODED VARIABLES ***
+    //
+    "reliabilityLevel": "Silver",
+    "clusterPurposeName": "render",
+    "clusterPurposeAbreviated": "rndr",
+    "environment": "devrender",
+    "clusterInstanceName": "primary",
+    "clusterInstanceAbbreviated": "prmry",
+    "clusterApplication": "ca9e36df-7baa-41d2-a356-e6825d114523",
+    "clientApplication": "8b87902f-8f5e-40f7-b8c4-fbc94b263e3a",
+    "applicationInsightsKey": "2d07a252-0886-4d53-9a0c-ef3c2a7371de",
+    "nt0applicationStartPort": 20000,
+    "nt0applicationEndPort": 30000,
+    "nt0ephemeralStartPort": 49152,
+    "nt0ephemeralEndPort": 65534,
+    "nt0fabricTcpGatewayPort": 19000,
+    "nt0fabricHttpGatewayPort": 19080,
+    "subnet0Prefix": "10.0.0.0/24",
+    "publicIPAddressType": "Dynamic",
+    "vmStorageAccountContainerName": "vhds",
+    "addressPrefix": "10.0.0.0/16",
+    "overProvision": "false",
+    "vmImagePublisher": "MicrosoftWindowsServer",
+    "vmImageOffer": "WindowsServer",
+    "vmImageSku": "2016-Datacenter",
+    "vmImageVersion": "latest",
+    "storageAccountType": "Standard_LRS",
+    "applicationLogStorageAccountType": "Standard_LRS",
+    "applicationDiagnosticsStorageAccountType": "Standard_LRS",
+    "nt0InstanceCount": 5,
+    "vmNodeType0Name": "core",
+    "vmNodeType0Size": "Standard_D2_v2",
+    "vaultName": "lazlo326-us-sc",
+    "vaultResourceGroup": "lazlo326",
+    "settingsCertificateName": "https://lazlo326-us-sc.vault.azure.net/secrets/devsettings/054d1329fcd24b299c04a76c6abba759",
+    "managementCertificateThumbprint": "472D0F31473571C3449878869B06579ACC842B5C",
+    "lazloCertificateName": "https://lazlo326-us-sc.vault.azure.net/secrets/sflazloio/998aff5a261b4fbfb6523d2b4b2662c6",
+    "vmssApiVersion": "2017-03-30",
+    "lbApiVersion": "2015-06-15",
+    "vNetApiVersion": "2015-06-15",
+    "storageApiVersion": "2017-10-01",
+    "publicIPApiVersion": "2015-06-15"
   },
   "resources": [
     {
+      "apiVersion": "2017-05-10",
+      "name": "nestedCnameTemplate",
+      "type": "Microsoft.Resources/deployments",
+      "resourceGroup": "[variables('rgDnsLocation')]",
+      "subscriptionId": "[variables('subscriptionIdGuid')]",
+      "properties": {
+        "mode": "Incremental",
+        "debugSetting": {
+          "detailLevel": "requestContent, responseContent"
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "resources": [
+            {
+              "comments": "Generalized from resource: '/subscriptions/be4c9638-e57a-4393-a2c3-c604ccb0bb3a/resourceGroups/dnstest_resources_deleteme/providers/Microsoft.Network/dnszones/deleteme.com/CNAME/testcname'.",
+              "type": "Microsoft.Network/dnszones/CNAME",
+              "name": "[concat(variables('dnsZone_Name'), '/', variables('cName'))]",
+              "apiVersion": "2018-05-01",
+              "scale": null,
+              "properties": {
+                "TTL": 3600,
+                "CNAMERecord": {
+                  // *** !!REMOVE HARD CODED VALUE!! ***
+                  //
+                  // *** This is a TEST to confirm that we can override PARAMETERS via Pipeline Deployment
+                  "cname": "[concat('dev.render.lazlo.io', '.', parameters('environmentName'))]"
+                }
+              }
+            }
+          ],
+          //"outputs": {
+          //  "nestedCnameInfo": {
+          //    "type": "object",
+          //    "value": "[reference(concat('Microsoft.Network/dnszones/CNAME/', variables('dnsZone_Name'), '/', variables('cName')))]"
+          //  }
+          //}
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressRender0'))]",
+        "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressAnnotate0'))]"
+      ]
+    },
+    {
       // This Nested Resource will create:
-      // 1. A DNS Zone (IF one does not exist)
-      // 2. A CNAME for that DNS Zone
-      // 3. Public IP Address for EndPoints
-      // 4. A Traffic Manager w/ EndPoints
+      //    1. A CNAME for an existing DNS Zone
+      //    2. A Traffic Manager w/ EndPoints
+      //    3. Assigns a Target Resource to each EndPoint
 
       "apiVersion": "2017-05-10",
-      "name": "nestedTemplate",
+      "name": "nestedCommonTemplate",
       "type": "Microsoft.Resources/deployments",
-      "resourceGroup": "[parameters('rgCommon')]",
-      "subscriptionId": "[parameters('subscriptionIdGuid')]",
+      "resourceGroup": "[variables('rgCommon')]",
+      "subscriptionId": "[variables('subscriptionIdGuid')]",
       "properties": {
         "mode": "Incremental",
         "debugSetting": {
@@ -372,154 +183,17 @@
           "contentVersion": "1.0.0.0",
           "resources": [
             //
-            // Create DNS Zone from scratch
-            //
-            //{
-            //  "comments": "Generalized from resource: '/subscriptions/be4c9638-e57a-4393-a2c3-c604ccb0bb3a/resourceGroups/dnstest_cname_deleteme/providers/Microsoft.Network/dnszones/testdnsdeleteme.com'.",
-            //  "type": "Microsoft.Network/dnszones",
-            //  "name": "[parameters('dnszone_name')]",
-            //  "apiVersion": "2018-05-01",
-            //  "location": "global",
-            //  "tags": {},
-            //  "scale": null,
-            //  "properties": {
-            //    "zoneType": "Public"
-            //  },
-            //  "dependsOn": []
-            //},
-            //{
-            //  "comments": "Generalized from resource: '/subscriptions/be4c9638-e57a-4393-a2c3-c604ccb0bb3a/resourceGroups/dnstest_cname_deleteme/providers/Microsoft.Network/dnszones/testdnsdeleteme.com/NS/@'.",
-            //  "type": "Microsoft.Network/dnszones/NS",
-            //  "name": "[concat(parameters('dnszone_name'), '/', parameters('NS_@_name'))]",
-            //  "apiVersion": "2018-05-01",
-            //  "scale": null,
-            //  "properties": {
-            //    "TTL": 172800,
-            //    "NSRecords": [
-            //      {
-            //        "nsdname": "ns1-06.azure-dns.com."
-            //      },
-            //      {
-            //        "nsdname": "ns2-06.azure-dns.net."
-            //      },
-            //      {
-            //        "nsdname": "ns3-06.azure-dns.org."
-            //      },
-            //      {
-            //        "nsdname": "ns4-06.azure-dns.info."
-            //      }
-            //    ],
-            //    "targetResource": {}
-            //  },
-            //  "dependsOn": [
-            //    "[concat('/subscriptions/be4c9638-e57a-4393-a2c3-c604ccb0bb3a/resourceGroups/deleteme-dev.common/providers/Microsoft.Network/dnszones/', parameters('dnszone_name'))]"
-            //  ]
-            //},
-            //{
-            //  "comments": "Generalized from resource: '/subscriptions/be4c9638-e57a-4393-a2c3-c604ccb0bb3a/resourceGroups/dnstest_cname_deleteme/providers/Microsoft.Network/dnszones/testdnsdeleteme.com/SOA/@'.",
-            //  "type": "Microsoft.Network/dnszones/SOA",
-            //  "name": "[concat(parameters('dnszone_name'), '/', parameters('SOA_@_name'))]",
-            //  "apiVersion": "2018-05-01",
-            //  "scale": null,
-            //  "properties": {
-            //    "TTL": 3600,
-            //    "SOARecord": {
-            //      "email": "azuredns-hostmaster.microsoft.com",
-            //      "expireTime": 2419200,
-            //      "host": "ns1-06.azure-dns.com.",
-            //      "minimumTTL": 300,
-            //      "refreshTime": 3600,
-            //      "retryTime": 300,
-            //      "serialNumber": 1
-            //    },
-            //    "targetResource": {}
-            //  },
-            //  "dependsOn": [
-            //    "[concat('/subscriptions/be4c9638-e57a-4393-a2c3-c604ccb0bb3a/resourceGroups/deleteme-dev.common/providers/Microsoft.Network/dnszones/', parameters('dnszone_name'))]"
-            //  ]
-            //},
-
-            // Create CNAME for DNS Zone - DNS Zone creation SHOULD already be completed
-
-            {
-              "comments": "Generalized from resource: '/subscriptions/be4c9638-e57a-4393-a2c3-c604ccb0bb3a/resourceGroups/dnstest_resources_deleteme/providers/Microsoft.Network/dnszones/deleteme.com/CNAME/testcname'.",
-              "type": "Microsoft.Network/dnszones/CNAME",
-              "name": "[concat(parameters('dnszone_name'), '/', parameters('cName'))]",
-              "apiVersion": "2018-05-01",
-              "scale": null,
-              "properties": {
-                "TTL": 3600,
-                "CNAMERecord": {
-                  "cname": "dev.render.lazlo.io"
-                },
-                "targetResource": {}
-              },
-              //
-              // HARD CODED DNS ZONE
-              // *** 'dependsOn' will only work and reference Resources within the same Template ***
-              //
-              //"dependsOn": [
-              //  "[concat('/subscriptions/be4c9638-e57a-4393-a2c3-c604ccb0bb3a/resourceGroups/deleteme-dev.common/providers/Microsoft.Network/dnszones/', parameters('dnszone_name'))]"
-              //]
-            },
-            // Public IP
-            //{
-            //  "comments": "Generalized from resource: '/subscriptions/be4c9638-e57a-4393-a2c3-c604ccb0bb3a/resourceGroups/DNSTest_Cname_DELETEME/providers/Microsoft.Network/publicIPAddresses/deleteme.pubip'.",
-            //  "type": "Microsoft.Network/publicIPAddresses",
-            //  "sku": {
-            //    "name": "Basic",
-            //    "tier": "Regional"
-            //  },
-            //  "name": "[parameters('publicIPAddresses_pubip001_name')]",
-            //  "apiVersion": "2018-08-01",
-            //  "location": "southcentralus",
-            //  "scale": null,
-            //  "properties": {
-            //    "provisioningState": "Succeeded",
-            //    "resourceGuid": "7d7340f6-60a9-4a3d-b8b3-90271bfb56f4",
-            //    "publicIPAddressVersion": "IPv4",
-            //    "publicIPAllocationMethod": "Dynamic",
-            //    "idleTimeoutInMinutes": 4,
-            //    "dnsSettings": {
-            //      "domainNameLabel": "deleteme-pubip001",
-            //      "fqdn": "deleteme-pubip001.southcentralus.cloudapp.azure.com"
-            //    }
-            //  }
-            //},
-            //{
-            //  "comments": "Generalized from resource: '/subscriptions/be4c9638-e57a-4393-a2c3-c604ccb0bb3a/resourceGroups/DNSTest_Cname_DELETEME/providers/Microsoft.Network/publicIPAddresses/deleteme.pubip'.",
-            //  "type": "Microsoft.Network/publicIPAddresses",
-            //  "sku": {
-            //    "name": "Basic",
-            //    "tier": "Regional"
-            //  },
-            //  "name": "[parameters('publicIPAddresses_pubip002_name')]",
-            //  "apiVersion": "2018-08-01",
-            //  "location": "southcentralus",
-            //  "scale": null,
-            //  "properties": {
-            //    "provisioningState": "Succeeded",
-            //    "resourceGuid": "15d0e711-65cd-458e-ae59-57ff95b02ce7",
-            //    "publicIPAddressVersion": "IPv4",
-            //    "publicIPAllocationMethod": "Dynamic",
-            //    "idleTimeoutInMinutes": 4,
-            //    "dnsSettings": {
-            //      "domainNameLabel": "deleteme-pubip002",
-            //      "fqdn": "deleteme-pubip002.southcentralus.cloudapp.azure.com"
-            //    }
-            //  }
-            //},
-            // Next: Add an EndPoint to a Traffic Manager
+            // Add EndPoints to Traffic Manager
             {
               "apiVersion": "2018-04-01",
               "type": "Microsoft.Network/trafficmanagerprofiles",
-              "name": "[parameters('trafficManagerName')]",
+              "name": "[variables('trafficManagerName')]",
               "location": "global",
               "properties": {
-                "trafficRoutingMethod": "[parameters('trafficRoutingMethod')]",
-                "maxReturn": "[parameters('maxReturn')]",
+                "trafficRoutingMethod": "[variables('trafficRoutingMethod')]",
+                "maxReturn": "[variables('maxReturn')]",
                 "dnsConfig": {
-                  "relativeName": "[parameters('relativeName')]",
+                  "relativeName": "[variables('relativeName')]",
                   "ttl": "60"
                 },
                 "monitorConfig": {
@@ -530,14 +204,14 @@
                 "endpoints": [
                   {
                     // EndPoint ties into 'publicIPAddressRender0'
-                    "id": "[concat(parameters('trafficManagerProfiles_id'), parameters('endpoint_name001'))]",
-                    "name": "[parameters('endpoint_name001')]",
+                    "id": "[concat(variables('trafficManagerProfiles_id'), variables('endpoint_name001'))]",
+                    "name": "[variables('endpoint_name001')]",
                     "type": "Microsoft.Network/trafficManagerProfiles/azureEndpoints",
                     "properties": {
                       "endpointStatus": "Enabled",
                       "endpointMonitorStatus": null,
-                      "targetResourceId": "[resourceId(parameters('rgRender'), 'Microsoft.Network/publicIPAddresses', variables('publicIPAddressRender0'))]",
-                      "target": "[concat(parameters('trafficManagerName'), variables('publicIPAddressRender0'), '.southcentralus.cloudapp.azure.com')]",
+                      "targetResourceId": "[resourceId(variables('rgMain'), 'Microsoft.Network/publicIPAddresses', variables('publicIPAddressRender0'))]",
+                      "target": "[concat(variables('trafficManagerName'), variables('publicIPAddressRender0'), '.southcentralus.cloudapp.azure.com')]",
                       "weight": 1,
                       "priority": 1,
                       "endpointLocation": "South Central US"
@@ -545,14 +219,14 @@
                   },
                   {
                     // EndPoint ties into 'publicIPAddressAnnotate0'
-                    "id": "[concat(parameters('trafficManagerProfiles_id'), parameters('endpoint_name002'))]",
-                    "name": "[parameters('endpoint_name002')]",
+                    "id": "[concat(variables('trafficManagerProfiles_id'), variables('endpoint_name002'))]",
+                    "name": "[variables('endpoint_name002')]",
                     "type": "Microsoft.Network/trafficManagerProfiles/azureEndpoints",
                     "properties": {
                       "endpointStatus": "Enabled",
                       "endpointMonitorStatus": null,
-                      "targetResourceId": "[resourceId(parameters('rgRender'), 'Microsoft.Network/publicIPAddresses',  variables('publicIPAddressAnnotate0'))]",
-                      "target": "[concat(parameters('trafficManagerName'), variables('publicIPAddressAnnotate0'), '.southcentralus.cloudapp.azure.com')]",
+                      "targetResourceId": "[resourceId(variables('rgMain'), 'Microsoft.Network/publicIPAddresses',  variables('publicIPAddressAnnotate0'))]",
+                      "target": "[concat(variables('trafficManagerName'), variables('publicIPAddressAnnotate0'), '.southcentralus.cloudapp.azure.com')]",
                       "weight": 1,
                       "priority": 2,
                       "endpointLocation": "South Central US"
@@ -561,45 +235,43 @@
                 ],
                 "trafficViewEnrollmentStatus": "Disabled"
               },
-              "dependsOn": [
-              ]
+              "dependsOn": []
             }
           ]
         }
       },
       "dependsOn": [
-        "[concat('/subscriptions/be4c9638-e57a-4393-a2c3-c604ccb0bb3a/resourceGroups/deleteme-dev.render/providers/Microsoft.Network/publicIPAddresses/', concat(variables('publicIPAddressRender0')))]",
-        "[concat('/subscriptions/be4c9638-e57a-4393-a2c3-c604ccb0bb3a/resourceGroups/deleteme-dev.render/providers/Microsoft.Network/publicIPAddresses/', concat(variables('publicIPAddressAnnotate0')))]"
+        "[resourceId('Microsoft.Resources/deployments', 'nestedCnameTemplate')]"
       ]
     },
     //
     // ORIGINAL 'sfcrndr.json' Resource are BELOW
     //
-    {
-      "type": "Microsoft.Authorization/locks",
-      "apiVersion": "2015-01-01",
-      "name": "[concat(resourceGroup().name, 'opslock')]",
-      "properties": {
-        "level": "ReadOnly",
-        "notes": "WARNING: This resource is generated via ARM templates. You have no reason to modify or delete the configuration. Contact operations@lazlo.io for action on this resource. If you make an unauthorized change, you will be terminated for cause. No exceptions."
-      },
-      "dependsOn": [
-        "[concat('Microsoft.ServiceFabric/clusters/', variables('clusterName'))]",
-        "[concat('Microsoft.Compute/virtualMachineScaleSets/', variables('clusterName'), 'vmss', parameters('vmNodeType0Name'))]"
-      ]
-    },
+    //{
+    //  "type": "Microsoft.Authorization/locks",
+    //  "apiVersion": "2015-01-01",
+    //  "name": "[concat(resourceGroup().name, 'opslock')]",
+    //  "properties": {
+    //    "level": "ReadOnly",
+    //    "notes": "WARNING: This resource is generated via ARM templates. You have no reason to modify or delete the configuration. Contact operations@lazlo.io for action on this resource. If you make an unauthorized change, you will be terminated for cause. No exceptions."
+    //  },
+    //  "dependsOn": [
+    //    "[concat('Microsoft.ServiceFabric/clusters/', variables('clusterName'))]",
+    //    "[concat('Microsoft.Compute/virtualMachineScaleSets/', variables('clusterName'), 'vmss', variables('vmNodeType0Name'))]"
+    //  ]
+    //},
     {
       "type": "Microsoft.Storage/storageAccounts",
       "sku": {
-        "name": "[parameters('applicationLogStorageAccountType')]"
+        "name": "[variables('applicationLogStorageAccountType')]"
       },
       "kind": "Storage",
       "name": "[variables('applicationtLogStorageAccountName')]",
       "apiVersion": "[variables('storageApiVersion')]",
-      "location": "[parameters('computeLocation')]",
+      "location": "[variables('computeLocation')]",
       "tags": {
         "displayName": "logs",
-        "environment": "[parameters('environment')]",
+        "environment": "[variables('environment')]",
         "resourceType": "Service Fabric",
         "clusterName": "[variables('clusterName')]"
       },
@@ -609,15 +281,15 @@
     {
       "type": "Microsoft.Storage/storageAccounts",
       "sku": {
-        "name": "[parameters('applicationDiagnosticsStorageAccountType')]"
+        "name": "[variables('applicationDiagnosticsStorageAccountType')]"
       },
       "kind": "Storage",
       "name": "[variables('applicationDiagnosticsStorageAccountName')]",
       "apiVersion": "[variables('storageApiVersion')]",
-      "location": "[parameters('computeLocation')]",
+      "location": "[variables('computeLocation')]",
       "tags": {
         "displayName": "diagnostics",
-        "environment": "[parameters('environment')]",
+        "environment": "[variables('environment')]",
         "resourceType": "Service Fabric",
         "clusterName": "[variables('clusterName')]"
       },
@@ -628,23 +300,23 @@
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[variables('virtualNetworkName')]",
       "apiVersion": "[variables('vNetApiVersion')]",
-      "location": "[parameters('computeLocation')]",
+      "location": "[variables('computeLocation')]",
       "tags": {
-        "environment": "[parameters('environment')]",
+        "environment": "[variables('environment')]",
         "resourceType": "Service Fabric",
         "clusterName": "[variables('clusterName')]"
       },
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
-            "[parameters('addressPrefix')]"
+            "[variables('addressPrefix')]"
           ]
         },
         "subnets": [
           {
             "name": "[variables('subnet0Name')]",
             "properties": {
-              "addressPrefix": "[parameters('subnet0Prefix')]"
+              "addressPrefix": "[variables('subnet0Prefix')]"
             }
           }
         ]
@@ -655,9 +327,9 @@
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[variables('publicIPAddressRender0')]",
       "apiVersion": "[variables('publicIPApiVersion')]",
-      "location": "[parameters('computeLocation')]",
+      "location": "[variables('computeLocation')]",
       "tags": {
-        "environment": "[parameters('environment')]",
+        "environment": "[variables('environment')]",
         "resourceType": "Service Fabric",
         "clusterName": "[variables('clusterName')]"
       },
@@ -672,9 +344,9 @@
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[variables('publicIPAddressAnnotate0')]",
       "apiVersion": "[variables('publicIPApiVersion')]",
-      "location": "[parameters('computeLocation')]",
+      "location": "[variables('computeLocation')]",
       "tags": {
-        "environment": "[parameters('environment')]",
+        "environment": "[variables('environment')]",
         "resourceType": "Service Fabric",
         "clusterName": "[variables('clusterName')]"
       },
@@ -689,9 +361,9 @@
       "type": "Microsoft.Network/loadBalancers",
       "name": "[variables('lbName')]",
       "apiVersion": "[variables('lbApiVersion')]",
-      "location": "[parameters('computeLocation')]",
+      "location": "[variables('computeLocation')]",
       "tags": {
-        "environment": "[parameters('environment')]",
+        "environment": "[variables('environment')]",
         "resourceType": "Service Fabric",
         "clusterName": "[variables('clusterName')]"
       },
@@ -727,12 +399,12 @@
               "backendAddressPool": {
                 "id": "[variables('lbPoolID0')]"
               },
-              "backendPort": "[parameters('nt0fabricTcpGatewayPort')]",
+              "backendPort": "[variables('nt0fabricTcpGatewayPort')]",
               "enableFloatingIP": false,
               "frontendIPConfiguration": {
                 "id": "[variables('lbIPConfig0')]"
               },
-              "frontendPort": "[parameters('nt0fabricTcpGatewayPort')]",
+              "frontendPort": "[variables('nt0fabricTcpGatewayPort')]",
               "idleTimeoutInMinutes": 5,
               "probe": {
                 "id": "[variables('lbProbeID0')]"
@@ -746,12 +418,12 @@
               "backendAddressPool": {
                 "id": "[variables('lbPoolID0')]"
               },
-              "backendPort": "[parameters('nt0fabricHttpGatewayPort')]",
+              "backendPort": "[variables('nt0fabricHttpGatewayPort')]",
               "enableFloatingIP": false,
               "frontendIPConfiguration": {
                 "id": "[variables('lbIPConfig0')]"
               },
-              "frontendPort": "[parameters('nt0fabricHttpGatewayPort')]",
+              "frontendPort": "[variables('nt0fabricHttpGatewayPort')]",
               "idleTimeoutInMinutes": 5,
               "probe": {
                 "id": "[variables('lbHttpProbeID0')]"
@@ -845,7 +517,7 @@
             "properties": {
               "intervalInSeconds": 5,
               "numberOfProbes": 2,
-              "port": "[parameters('nt0fabricTcpGatewayPort')]",
+              "port": "[variables('nt0fabricTcpGatewayPort')]",
               "protocol": "Tcp"
             }
           },
@@ -854,7 +526,7 @@
             "properties": {
               "intervalInSeconds": 5,
               "numberOfProbes": 2,
-              "port": "[parameters('nt0fabricHttpGatewayPort')]",
+              "port": "[variables('nt0fabricHttpGatewayPort')]",
               "protocol": "Tcp"
             }
           }
@@ -882,23 +554,23 @@
     {
       "type": "Microsoft.Compute/virtualMachineScaleSets",
       "sku": {
-        "name": "[parameters('vmNodeType0Size')]",
-        "capacity": "[parameters('nt0InstanceCount')]",
+        "name": "[variables('vmNodeType0Size')]",
+        "capacity": "[variables('nt0InstanceCount')]",
         "tier": "Standard"
       },
-      "name": "[concat(variables('clusterName'), 'vmss', parameters('vmNodeType0Name'))]",
+      "name": "[concat(variables('clusterName'), 'vmss', variables('vmNodeType0Name'))]",
       "apiVersion": "[variables('vmssApiVersion')]",
-      "location": "[parameters('computeLocation')]",
+      "location": "[variables('computeLocation')]",
       "identity": {
         "type": "SystemAssigned"
       },
       "tags": {
-        "environment": "[parameters('environment')]",
+        "environment": "[variables('environment')]",
         "resourceType": "Service Fabric",
         "clusterName": "[variables('clusterName')]"
       },
       "properties": {
-        "overprovision": "[parameters('overProvision')]",
+        "overprovision": "[variables('overProvision')]",
         "upgradePolicy": {
           "mode": "Automatic"
         },
@@ -906,7 +578,7 @@
           "extensionProfile": {
             "extensions": [
               {
-                "name": "[concat('ServiceFabricNode-', parameters('vmNodeType0Name'))]",
+                "name": "[concat('ServiceFabricNode-', variables('vmNodeType0Name'))]",
                 "properties": {
                   "type": "ServiceFabricNode",
                   "autoUpgradeMinorVersion": true,
@@ -917,13 +589,13 @@
                   "publisher": "Microsoft.Azure.ServiceFabric",
                   "settings": {
                     "clusterEndpoint": "[reference(variables('clusterName')).clusterEndpoint]",
-                    "nodeTypeRef": "[parameters('vmNodeType0Name')]",
+                    "nodeTypeRef": "[variables('vmNodeType0Name')]",
                     "dataPath": "D:\\\\SvcFab",
                     "durabilityLevel": "Silver",
                     "enableParallelJobs": true,
-                    "nicPrefixOverride": "[parameters('subnet0Prefix')]",
+                    "nicPrefixOverride": "[variables('subnet0Prefix')]",
                     "certificate": {
-                      "thumbprint": "[parameters('managementCertificateThumbprint')]",
+                      "thumbprint": "[variables('managementCertificateThumbprint')]",
                       "x509StoreName": "My"
                     }
                   },
@@ -931,7 +603,7 @@
                 }
               },
               {
-                "name": "[concat('VMDiagnosticsVmExt-', parameters('vmNodeType0Name'))]",
+                "name": "[concat('VMDiagnosticsVmExt-', variables('vmNodeType0Name'))]",
                 "properties": {
                   "type": "IaaSDiagnostics",
                   "autoUpgradeMinorVersion": true,
@@ -981,7 +653,7 @@
                         "Sink": [
                           {
                             "name": "applicationInsights",
-                            "ApplicationInsights": "[parameters('applicationInsightsKey')]"
+                            "ApplicationInsights": "[variables('applicationInsightsKey')]"
                           }
                         ]
                       }
@@ -997,11 +669,11 @@
                   "autoUpgradeMinorVersion": true,
                   "settings": {
                     "fileUris": [
-                      "https://lazlo326.blob.core.windows.net/vmscripts/InstallNetFx472.ps1",
+                      "https://lazlo326.blob.core.windows.net/vmscripts/dotnet-install.ps1",
                       "https://lazlo326.blob.core.windows.net/vmscripts/SetEnvironmentVariable.ps1",
                       "https://lazlo326.blob.core.windows.net/vmscripts/Master.ps1"
                     ],
-                    "commandToExecute": "[concat('powershell -NonInteractive -ExecutionPolicy Bypass -File Master.ps1 ActiveConfiguration ', parameters('environment'))]"
+                    "commandToExecute": "[concat('powershell -NonInteractive -ExecutionPolicy Bypass -File Master.ps1 ActiveConfiguration ', variables('environment'))]"
                   },
                   "publisher": "Microsoft.Compute",
                   "type": "CustomScriptExtension",
@@ -1043,7 +715,7 @@
           "osProfile": {
             "adminUsername": "[parameters('osProfileAdminUserName')]",
             "adminPassword": "[concat(parameters('osProfileAdminPassword'))]",
-            "computernamePrefix": "[parameters('vmNodeType0Name')]",
+            "computernamePrefix": "[variables('vmNodeType0Name')]",
             "secrets": [
               {
                 "sourceVault": {
@@ -1051,11 +723,11 @@
                 },
                 "vaultCertificates": [
                   {
-                    "certificateUrl": "[parameters('settingsCertificateName')]",
+                    "certificateUrl": "[variables('settingsCertificateName')]",
                     "certificateStore": "My"
                   },
                   {
-                    "certificateUrl": "[parameters('lazloCertificateName')]",
+                    "certificateUrl": "[variables('lazloCertificateName')]",
                     "certificateStore": "My"
                   }
                 ]
@@ -1064,16 +736,16 @@
           },
           "storageProfile": {
             "imageReference": {
-              "publisher": "[parameters('vmImagePublisher')]",
-              "offer": "[parameters('vmImageOffer')]",
-              "sku": "[parameters('vmImageSku')]",
-              "version": "[parameters('vmImageVersion')]"
+              "publisher": "[variables('vmImagePublisher')]",
+              "offer": "[variables('vmImageOffer')]",
+              "sku": "[variables('vmImageSku')]",
+              "version": "[variables('vmImageVersion')]"
             },
             "osDisk": {
               "caching": "ReadOnly",
               "createOption": "FromImage",
               "managedDisk": {
-                "storageAccountType": "[parameters('storageAccountType')]"
+                "storageAccountType": "[variables('storageAccountType')]"
               }
             },
             "dataDisks": [
@@ -1101,9 +773,9 @@
       "type": "Microsoft.ServiceFabric/clusters",
       "name": "[variables('clusterName')]",
       "apiVersion": "2017-07-01-preview",
-      "location": "[parameters('computeLocation')]",
+      "location": "[variables('computeLocation')]",
       "tags": {
-        "environment": "[parameters('environment')]",
+        "environment": "[variables('environment')]",
         "resourceType": "Service Fabric",
         "clusterName": "[variables('clusterName')]"
       },
@@ -1121,37 +793,37 @@
           "tableEndpoint": "[reference(concat('Microsoft.Storage/storageAccounts/', variables('applicationtLogStorageAccountName')), '2017-10-01').primaryEndpoints['table']]"
         },
         "fabricSettings": [],
-        "managementEndpoint": "[concat('https://',variables('dnsName'),'.sf.lazlo.io:',parameters('nt0fabricHttpGatewayPort'))]",
+        "managementEndpoint": "[concat('https://',variables('dnsName'),'.sf.lazlo.io:',variables('nt0fabricHttpGatewayPort'))]",
         "nodeTypes": [
           {
-            "name": "[parameters('vmNodeType0Name')]",
+            "name": "[variables('vmNodeType0Name')]",
             "applicationPorts": {
-              "endPort": "[parameters('nt0applicationEndPort')]",
-              "startPort": "[parameters('nt0applicationStartPort')]"
+              "endPort": "[variables('nt0applicationEndPort')]",
+              "startPort": "[variables('nt0applicationStartPort')]"
             },
-            "clientConnectionEndpointPort": "[parameters('nt0fabricTcpGatewayPort')]",
+            "clientConnectionEndpointPort": "[variables('nt0fabricTcpGatewayPort')]",
             "durabilityLevel": "Silver",
             "ephemeralPorts": {
-              "endPort": "[parameters('nt0ephemeralEndPort')]",
-              "startPort": "[parameters('nt0ephemeralStartPort')]"
+              "endPort": "[variables('nt0ephemeralEndPort')]",
+              "startPort": "[variables('nt0ephemeralStartPort')]"
             },
-            "httpGatewayEndpointPort": "[parameters('nt0fabricHttpGatewayPort')]",
+            "httpGatewayEndpointPort": "[variables('nt0fabricHttpGatewayPort')]",
             "isPrimary": true,
-            "vmInstanceCount": "[parameters('nt0InstanceCount')]"
+            "vmInstanceCount": "[variables('nt0InstanceCount')]"
           }
         ],
         "provisioningState": "Default",
-        "reliabilityLevel": "[parameters('reliabilityLevel')]",
+        "reliabilityLevel": "[variables('reliabilityLevel')]",
         "upgradeMode": "Manual",
         "vmImage": "Windows",
         "certificate": {
-          "thumbprint": "[parameters('managementCertificateThumbprint')]",
+          "thumbprint": "[variables('managementCertificateThumbprint')]",
           "x509StoreName": "My"
         },
         "azureActiveDirectory": {
           "tenantId": "96fb6ace-8227-4453-97e3-0eac201452e0",
-          "clusterApplication": "[parameters('clusterApplication')]",
-          "clientApplication": "[parameters('clientApplication')]"
+          "clusterApplication": "[variables('clusterApplication')]",
+          "clientApplication": "[variables('clientApplication')]"
         }
       },
       "dependsOn": [
@@ -1163,6 +835,22 @@
     "clusterProperties": {
       "type": "object",
       "value": "[reference(variables('clusterName'))]"
-    }
+    },
+    //"documentEndpoint": {
+    //  "type": "string",
+    //  "value": "[reference(variables('resourceId'), variables('apiVersion')).documentEndpoint]"
+    //},
+    //"accountKey": {
+    //  "type": "string",
+    //  "value": "[listKeys(variables('resourceId'), variables('apiVersion')).primaryMasterKey]"
+    //},
+    //"connectionString": {
+    //  "type": "string",
+    //  "value": "[concat('AccountEndpoint=https://', variables('cosmosDbAccount').name, '.documents.azure.com:443/;AccountKey=', listKeys(variables('resourceId'), variables('apiVersion')).primaryMasterKey, ';')]"
+    //}
+    //"cName": {
+    //  "type": "object",
+    //  "value": "[reference('nestedCnameTemplate').outputs.nestedCnameInfo.value]"
+    //}
   }
-}
+} 
