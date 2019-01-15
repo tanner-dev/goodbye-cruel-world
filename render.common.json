@@ -1,0 +1,222 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environmentName": {
+      "defaultValue": "deletememcp",
+      "type": "String"
+    },
+    "environmentLocation": {
+      "defaultValue": "deletememcp",
+      "type": "String"
+    }
+  },
+  "variables": {
+    "components_rndr_name": "[concat(parameters('environmentName'),'rndr')]",
+    "storageAccounts_rndr_name": "[concat(parameters('environmentName'),'rndr')]",
+    "databaseAccounts_rndr_name": "[concat(parameters('environmentName'),'rndr')]",
+    "storageAccounts_rndrbbs01_name": "[concat(parameters('environmentName'), 'bbs01','rndr')]",
+    "storageAccounts_rndrbbs02_name": "[concat(parameters('environmentName'), 'bbs02','rndr')]",
+    "storageAccounts_rndrbbs03_name": "[concat(parameters('environmentName'), 'bbs03','rndr')]"
+    },
+  "resources": [
+      {
+          "comments": "",
+          "type": "Microsoft.DocumentDB/databaseAccounts",
+          "kind": "GlobalDocumentDB",
+          "name": "[variables('databaseAccounts_rndr_name')]",
+          "apiVersion": "2015-04-08",
+          "location": "South Central US",
+          "tags": {
+              "defaultExperience": "DocumentDB"
+          },
+          "scale": null,
+          "properties": {
+              "ipRangeFilter": "",
+              "enableAutomaticFailover": false,
+              "enableMultipleWriteLocations": false,
+              "isVirtualNetworkFilterEnabled": false,
+              "virtualNetworkRules": [],
+              "databaseAccountOfferType": "Standard",
+              "consistencyPolicy": {
+                  "defaultConsistencyLevel": "Session",
+                  "maxIntervalInSeconds": 5,
+                  "maxStalenessPrefix": 100
+              },
+              "locations": [
+                {
+                  "locationName": "North Central US",
+                  "provisioningState": "Succeeded",
+                  "failoverPriority": 0
+                },
+                {
+                  "locationName": "South Central US",
+                  "provisioningState": "Succeeded",
+                  "failoverPriority": 1
+                }
+              ],
+              "capabilities": []
+          },
+          "dependsOn": []
+      },
+    {
+      "comments": "",
+      "type": "microsoft.insights/components",
+      "kind": "other",
+      "name": "[variables('components_rndr_name')]",
+      "apiVersion": "2015-05-01",
+      "location": "South Central US",
+      "tags": {},
+      "scale": null,
+      "properties": {
+        "Application_Type": "other",
+        "Flow_Type": "Redfield",
+        "Request_Source": "IbizaAIExtension",
+        "HockeyAppId": null,
+        "SamplingPercentage": null
+      },
+      "dependsOn": []
+    },
+    {
+      "comments": "",
+      "type": "Microsoft.Storage/storageAccounts",
+      "sku": {
+        "name": "Premium_LRS",
+        "tier": "Premium"
+      },
+      "kind": "BlockBlobStorage",
+      "name": "[variables('storageAccounts_rndrbbs01_name')]",
+      "apiVersion": "2018-07-01",
+      "location": "Central US",
+      "tags": {},
+      "scale": null,
+      "properties": {
+        "networkAcls": {
+          "bypass": "AzureServices",
+          "virtualNetworkRules": [],
+          "ipRules": [],
+          "defaultAction": "Allow"
+        },
+        "supportsHttpsTrafficOnly": true,
+        "encryption": {
+          "services": {
+            "file": {
+              "enabled": true
+            },
+            "blob": {
+              "enabled": true
+            }
+          },
+          "keySource": "Microsoft.Storage"
+        }
+      },
+      "dependsOn": []
+    },
+    {
+      "comments": "",
+      "type": "Microsoft.Storage/storageAccounts",
+      "sku": {
+        "name": "Premium_LRS",
+        "tier": "Premium"
+      },
+      "kind": "BlockBlobStorage",
+      "name": "[variables('storageAccounts_rndrbbs02_name')]",
+      "apiVersion": "2018-07-01",
+      "location": "Central US",
+      "tags": {},
+      "scale": null,
+      "properties": {
+        "networkAcls": {
+          "bypass": "AzureServices",
+          "virtualNetworkRules": [],
+          "ipRules": [],
+          "defaultAction": "Allow"
+        },
+        "supportsHttpsTrafficOnly": true,
+        "encryption": {
+          "services": {
+            "file": {
+              "enabled": true
+            },
+            "blob": {
+              "enabled": true
+            }
+          },
+          "keySource": "Microsoft.Storage"
+        }
+      },
+      "dependsOn": []
+    },
+    {
+      "comments": "",
+      "type": "Microsoft.Storage/storageAccounts",
+      "sku": {
+        "name": "Premium_LRS",
+        "tier": "Premium"
+      },
+      "kind": "BlockBlobStorage",
+      "name": "[variables('storageAccounts_rndrbbs03_name')]",
+      "apiVersion": "2018-07-01",
+      "location": "Central US",
+      "tags": {},
+      "scale": null,
+      "properties": {
+        "networkAcls": {
+          "bypass": "AzureServices",
+          "virtualNetworkRules": [],
+          "ipRules": [],
+          "defaultAction": "Allow"
+        },
+        "supportsHttpsTrafficOnly": true,
+        "encryption": {
+          "services": {
+            "file": {
+              "enabled": true
+            },
+            "blob": {
+              "enabled": true
+            }
+          },
+          "keySource": "Microsoft.Storage"
+        }
+      },
+      "dependsOn": []
+    },
+    {
+      "comments": "",
+      "type": "Microsoft.Storage/storageAccounts",
+      "sku": {
+        "name": "Standard_RAGRS",
+        "tier": "Standard"
+      },
+      "kind": "StorageV2",
+      "name": "[variables('storageAccounts_rndr_name')]",
+      "apiVersion": "2018-07-01",
+      "location": "South Central US",
+      "tags": {},
+      "scale": null,
+      "properties": {
+        "networkAcls": {
+          "bypass": "AzureServices",
+          "virtualNetworkRules": [],
+          "ipRules": [],
+          "defaultAction": "Allow"
+        },
+        "supportsHttpsTrafficOnly": false,
+        "encryption": {
+          "services": {
+            "file": {
+              "enabled": true
+            },
+            "blob": {
+              "enabled": true
+            }
+          },
+          "keySource": "Microsoft.Storage"
+        },
+        "accessTier": "Hot"
+      },
+      "dependsOn": []
+    }
+  ]
+}
