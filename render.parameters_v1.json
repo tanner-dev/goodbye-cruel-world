@@ -1,0 +1,125 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "reliabilityLevel": {
+      "value": "Silver"
+    },
+    "clusterPurposeName": {
+      "value": "render"
+    },
+    "clusterPurposeAbreviated": {
+      "value": "rndr"
+    },
+    "environment": {
+      "value": "devrender"
+    },
+    "clusterInstanceName": {
+      "value": "primary"
+    },
+    "clusterInstanceAbbreviated": {
+      "value": "prmry"
+    },
+    "clusterApplication": {
+      "value": "ca9e36df-7baa-41d2-a356-e6825d114523"
+    },
+    "clientApplication": {
+      "value": "8b87902f-8f5e-40f7-b8c4-fbc94b263e3a"
+    },
+    "applicationInsightsKey": {
+      "value": "2d07a252-0886-4d53-9a0c-ef3c2a7371de"
+    },
+    "nt0applicationStartPort": {
+      "value": 20000
+    },
+    "nt0applicationEndPort": {
+      "value": 30000
+    },
+    "nt0ephemeralStartPort": {
+      "value": 49152
+    },
+    "nt0ephemeralEndPort": {
+      "value": 65534
+    },
+    "nt0fabricTcpGatewayPort": {
+      "value": 19000
+    },
+    "nt0fabricHttpGatewayPort": {
+      "value": 19080
+    },
+    "subnet0Prefix": {
+      "value": "10.0.0.0/24"
+    },
+    "computeLocation": {
+      "value": "southcentralus"
+    },
+    "publicIPAddressType": {
+      "value": "Dynamic"
+    },
+    "vmStorageAccountContainerName": {
+      "value": "vhds"
+    },
+    "addressPrefix": {
+      "value": "10.0.0.0/16"
+    },
+    "overProvision": {
+      "value": "false"
+    },
+    "vmImagePublisher": {
+      "value": "MicrosoftWindowsServer"
+    },
+    "vmImageOffer": {
+      "value": "WindowsServer"
+    },
+    "vmImageSku": {
+      "value": "2016-Datacenter"
+    },
+    "vmImageVersion": {
+      "value": "latest"
+    },
+    "storageAccountType": {
+      "value": "Standard_LRS"
+    },
+    "applicationLogStorageAccountType": {
+      "value": "Standard_LRS"
+    },
+    "applicationDiagnosticsStorageAccountType": {
+      "value": "Standard_LRS"
+    },
+    "nt0InstanceCount": {
+      "value": 5
+    },
+    "vmNodeType0Name": {
+      "value": "core"
+    },
+    "vmNodeType0Size": {
+      "value": "Standard_D2_v2"
+    },
+    "vaultName": {
+      "value": "lazlo326-us-sc"
+    },
+    "vaultResourceGroup": {
+      "value": "lazlo326"
+    },
+    "settingsCertificateName": {
+      "value": "https://lazlo326-us-sc.vault.azure.net/secrets/devsettings/054d1329fcd24b299c04a76c6abba759"
+    },
+    "lazloCertificateName": {
+      "value": "https://lazlo326-us-sc.vault.azure.net/secrets/sflazloio/998aff5a261b4fbfb6523d2b4b2662c6"
+    },
+    "managementCertificateThumbprint": {
+      "value": "472D0F31473571C3449878869B06579ACC842B5C"
+    },
+    "osProfileAdminUserName": {
+      "value": "lazlo"
+    },
+    "osProfileAdminPassword": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/be4c9638-e57a-4393-a2c3-c604ccb0bb3a/resourceGroups/lazlo326/providers/Microsoft.KeyVault/vaults/lazlo326-us-sc"
+        },
+        "secretName": "devvmadminpwd"
+      }
+    }
+  }
+}
