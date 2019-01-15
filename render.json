@@ -144,17 +144,11 @@
                   // *** !!REMOVE HARD CODED VALUE!! ***
                   //
                   // *** This is a TEST to confirm that we can override PARAMETERS via Pipeline Deployment
-                  "cname": "[concat('dev.render.lazlo.io', '.', parameters('environmentName'))]"
+                  "cname": "[concat(parameters('environmentName'), '.', parameters('actionName'), '.', variables('dnsZone_Name'))]"
                 }
               }
             }
           ]
-          //"outputs": {
-          //  "nestedCnameInfo": {
-          //    "type": "object",
-          //    "value": "[reference(concat('Microsoft.Network/dnszones/CNAME/', variables('dnsZone_Name'), '/', variables('cName')))]"
-          //  }
-          //}
         }
       },
       "dependsOn": [
@@ -835,7 +829,7 @@
     "clusterProperties": {
       "type": "object",
       "value": "[reference(variables('clusterName'))]"
-    }
+    },
     //"documentEndpoint": {
     //  "type": "string",
     //  "value": "[reference(variables('resourceId'), variables('apiVersion')).documentEndpoint]"
@@ -852,5 +846,9 @@
     //  "type": "object",
     //  "value": "[reference('nestedCnameTemplate').outputs.nestedCnameInfo.value]"
     //}
+    "nestedCnameInfo": {
+      "type": "object",
+      "value": "[reference('nestedCnameTemplate')]"
+    }
   }
 } 
