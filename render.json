@@ -1,7 +1,123 @@
+<<<<<<< HEAD
 ﻿﻿{
+=======
+{
+>>>>>>> 3c4131da04b686d8ea163f7e71d89678b91d559c
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    //
+    // Choose an existing Resource Group (If Resource Group does not exist, specify name in Pipeline Variable)
+    //
+    "rgCommon": {
+      "defaultValue": "dev.common-deleteme",
+      "type": "string"
+    },
+    "rgRender": {
+      "defaultValue": "dev.render-deleteme",
+      "type": "string"
+    },
+    //
+    // DNS Zone *** MUST EXIST ***
+    //
+    "dnszone_name": {
+      "defaultValue": "lazlo.io.deleteme",
+      "type": "String"
+    },
+    //
+    // CNAME Array
+    //
+    //"cName": {
+    //  "defaultValue": [
+    //    { "name": "cname_deleteme001" },
+    //    { "name": "cname_deleteme002" },
+    //    { "name": "cname_deleteme003" },
+    //    { "name": "cname_deleteme004" },
+    //    { "name": "cname_deleteme005" }
+    //  ],
+    //  "type": "array"
+    //},
+    "cName": {
+      "defaultValue": "dev.render-deleteme",
+      "type": "string"
+    },
+    "subscriptionIdGuid": {
+      "defaultValue": "be4c9638-e57a-4393-a2c3-c604ccb0bb3a",
+      "type": "string"
+    },
+    "computeLocation": {
+      "defaultValue": "southcentralus",
+      "type": "string"
+    },
+    //
+    // BEGIN Traffic Manger
+    //
+    "trafficManagerName": {
+      "defaultValue": "deleteme-devrender",
+      "type": "string"
+    },
+    "relativeName": {
+      "type": "string"
+    },
+    "trafficRoutingMethod": {
+      "type": "string",
+      "defaultValue": "Performance",
+      "allowedValues": [
+        "Performance",
+        "Weighted",
+        "Priority",
+        "Geographic",
+        "MultiValue",
+        "Subnet"
+      ]
+    },
+    "maxReturn": {
+      "type": "int"
+    },
+
+    // END Traffic Manager
+
+    // BEGIN Endpoints
+
+    "endpoint_name001": {
+      "defaultValue": "dev.render.southcentralus",
+      "type": "String"
+    },
+    "endpoint_name002": {
+      "defaultValue": "dev.render.northcentralus",
+      "type": "String"
+    },
+    //"trafficManagerProfiles_name": {
+    //  "defaultValue": "deleteme",
+    //  "type": "string"
+    //},
+    "NS_@_name": {
+      "defaultValue": "@",
+      "type": "string"
+    },
+    //"publicIPAddresses_pubip001_name": {
+    //  "defaultValue": "deleteme-pubip001",
+    //  "type": "String"
+    //},
+    //"publicIPAddresses_pubip002_name": {
+    //  "defaultValue": "deleteme-pubip002",
+    //  "type": "String"
+    //},
+    "SOA_@_name": {
+      "defaultValue": "@",
+      "type": "string"
+    },
+    "trafficManagerProfiles_id": {
+      "defaultValue": "/subscriptions/be4c9638-e57a-4393-a2c3-c604ccb0bb3a/resourceGroups/deleteme-dev.common/providers/Microsoft.Network/trafficManagerProfiles/deleteme-devrender/azureEndpoints/",
+      "type": "String"
+    },
+
+    // END Endpoints
+
+    "subscriptionIdGuid": {
+      "defaultValue": "be4c9638-e57a-4393-a2c3-c604ccb0bb3a",
+      "type": "string"
+    },
     "reliabilityLevel": {
       "defaultValue": "Silver",
       "type": "string",
@@ -217,10 +333,14 @@
     "nicName": "[concat(variables('clusterName'), 'nic')]",
     "virtualNetworkName": "[concat(variables('clusterName'), 'vnet')]",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
+    //
+    // IP Addresses (More Public IP Address can be added ** Looking into adding via an Array)
     "publicIPAddressRenderName": "[concat(variables('clusterName'), 'render', 'pubip')]",
     "publicIPAddressRender0": "[concat(variables('publicIPAddressRenderName'), '0')]",
     "publicIPAddressAnnotateName": "[concat(variables('clusterName'), 'annotate', 'pubip')]",
     "publicIPAddressAnnotate0": "[concat(variables('publicIPAddressAnnotateName'), '0')]",
+    //
+    //
     "dnsNameAnnotate": "[concat('annotate', parameters('environment'))]",
     "subnet0Name": "[concat(variables('clusterName'),'Subnet', '0')]",
     "subnet0Ref": "[concat(variables('vnetID'),'/subnets/',variables('subnet0Name'))]",
@@ -234,19 +354,244 @@
     "vaultId": "[concat('/subscriptions/be4c9638-e57a-4393-a2c3-c604ccb0bb3a/resourceGroups/',parameters('vaultResourceGroup'),'/providers/Microsoft.KeyVault/vaults/',parameters('vaultName'))]"
   },
   "resources": [
-    //{
-    //  "type": "Microsoft.Authorization/locks",
-    //  "apiVersion": "2015-01-01",
-    //  "name": "[concat(resourceGroup().name, 'opslock')]",
-    //  "properties": {
-    //    "level": "ReadOnly",
-    //    "notes": "WARNING: This resource is generated via ARM templates. You have no reason to modify or delete the configuration. Contact operations@lazlo.io for action on this resource. If you make an unauthorized change, you will be terminated for cause. No exceptions."
-    //  },
-    //  "dependsOn": [
-    //    "[concat('Microsoft.ServiceFabric/clusters/', variables('clusterName'))]",
-    //    "[concat('Microsoft.Compute/virtualMachineScaleSets/', variables('clusterName'), 'vmss', parameters('vmNodeType0Name'))]"
-    //  ]
-    //},
+    {
+      // This Nested Resource will create:
+      // 1. A DNS Zone (IF one does not exist)
+      // 2. A CNAME for that DNS Zone
+      // 3. Public IP Address for EndPoints
+      // 4. A Traffic Manager w/ EndPoints
+
+      "apiVersion": "2017-05-10",
+      "name": "nestedTemplate",
+      "type": "Microsoft.Resources/deployments",
+      "resourceGroup": "[parameters('rgCommon')]",
+      "subscriptionId": "[parameters('subscriptionIdGuid')]",
+      "properties": {
+        "mode": "Incremental",
+        "debugSetting": {
+          "detailLevel": "requestContent, responseContent"
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "resources": [
+            //
+            // Create DNS Zone from scratch
+            //
+            //{
+            //  "comments": "Generalized from resource: '/subscriptions/be4c9638-e57a-4393-a2c3-c604ccb0bb3a/resourceGroups/dnstest_cname_deleteme/providers/Microsoft.Network/dnszones/testdnsdeleteme.com'.",
+            //  "type": "Microsoft.Network/dnszones",
+            //  "name": "[parameters('dnszone_name')]",
+            //  "apiVersion": "2018-05-01",
+            //  "location": "global",
+            //  "tags": {},
+            //  "scale": null,
+            //  "properties": {
+            //    "zoneType": "Public"
+            //  },
+            //  "dependsOn": []
+            //},
+            //{
+            //  "comments": "Generalized from resource: '/subscriptions/be4c9638-e57a-4393-a2c3-c604ccb0bb3a/resourceGroups/dnstest_cname_deleteme/providers/Microsoft.Network/dnszones/testdnsdeleteme.com/NS/@'.",
+            //  "type": "Microsoft.Network/dnszones/NS",
+            //  "name": "[concat(parameters('dnszone_name'), '/', parameters('NS_@_name'))]",
+            //  "apiVersion": "2018-05-01",
+            //  "scale": null,
+            //  "properties": {
+            //    "TTL": 172800,
+            //    "NSRecords": [
+            //      {
+            //        "nsdname": "ns1-06.azure-dns.com."
+            //      },
+            //      {
+            //        "nsdname": "ns2-06.azure-dns.net."
+            //      },
+            //      {
+            //        "nsdname": "ns3-06.azure-dns.org."
+            //      },
+            //      {
+            //        "nsdname": "ns4-06.azure-dns.info."
+            //      }
+            //    ],
+            //    "targetResource": {}
+            //  },
+            //  "dependsOn": [
+            //    "[concat('/subscriptions/be4c9638-e57a-4393-a2c3-c604ccb0bb3a/resourceGroups/deleteme-dev.common/providers/Microsoft.Network/dnszones/', parameters('dnszone_name'))]"
+            //  ]
+            //},
+            //{
+            //  "comments": "Generalized from resource: '/subscriptions/be4c9638-e57a-4393-a2c3-c604ccb0bb3a/resourceGroups/dnstest_cname_deleteme/providers/Microsoft.Network/dnszones/testdnsdeleteme.com/SOA/@'.",
+            //  "type": "Microsoft.Network/dnszones/SOA",
+            //  "name": "[concat(parameters('dnszone_name'), '/', parameters('SOA_@_name'))]",
+            //  "apiVersion": "2018-05-01",
+            //  "scale": null,
+            //  "properties": {
+            //    "TTL": 3600,
+            //    "SOARecord": {
+            //      "email": "azuredns-hostmaster.microsoft.com",
+            //      "expireTime": 2419200,
+            //      "host": "ns1-06.azure-dns.com.",
+            //      "minimumTTL": 300,
+            //      "refreshTime": 3600,
+            //      "retryTime": 300,
+            //      "serialNumber": 1
+            //    },
+            //    "targetResource": {}
+            //  },
+            //  "dependsOn": [
+            //    "[concat('/subscriptions/be4c9638-e57a-4393-a2c3-c604ccb0bb3a/resourceGroups/deleteme-dev.common/providers/Microsoft.Network/dnszones/', parameters('dnszone_name'))]"
+            //  ]
+            //},
+
+            // Create CNAME for DNS Zone - DNS Zone creation SHOULD already be completed
+
+            {
+              "comments": "Generalized from resource: '/subscriptions/be4c9638-e57a-4393-a2c3-c604ccb0bb3a/resourceGroups/dnstest_resources_deleteme/providers/Microsoft.Network/dnszones/deleteme.com/CNAME/testcname'.",
+              "type": "Microsoft.Network/dnszones/CNAME",
+              "name": "[concat(parameters('dnszone_name'), '/', parameters('cName'))]",
+              "apiVersion": "2018-05-01",
+              "scale": null,
+              "properties": {
+                "TTL": 3600,
+                "CNAMERecord": {
+                  "cname": "dev.render.lazlo.io"
+                },
+                "targetResource": {}
+              },
+              //
+              // HARD CODED DNS ZONE
+              // *** 'dependsOn' will only work and reference Resources within the same Template ***
+              //
+              //"dependsOn": [
+              //  "[concat('/subscriptions/be4c9638-e57a-4393-a2c3-c604ccb0bb3a/resourceGroups/deleteme-dev.common/providers/Microsoft.Network/dnszones/', parameters('dnszone_name'))]"
+              //]
+            },
+            // Public IP
+            //{
+            //  "comments": "Generalized from resource: '/subscriptions/be4c9638-e57a-4393-a2c3-c604ccb0bb3a/resourceGroups/DNSTest_Cname_DELETEME/providers/Microsoft.Network/publicIPAddresses/deleteme.pubip'.",
+            //  "type": "Microsoft.Network/publicIPAddresses",
+            //  "sku": {
+            //    "name": "Basic",
+            //    "tier": "Regional"
+            //  },
+            //  "name": "[parameters('publicIPAddresses_pubip001_name')]",
+            //  "apiVersion": "2018-08-01",
+            //  "location": "southcentralus",
+            //  "scale": null,
+            //  "properties": {
+            //    "provisioningState": "Succeeded",
+            //    "resourceGuid": "7d7340f6-60a9-4a3d-b8b3-90271bfb56f4",
+            //    "publicIPAddressVersion": "IPv4",
+            //    "publicIPAllocationMethod": "Dynamic",
+            //    "idleTimeoutInMinutes": 4,
+            //    "dnsSettings": {
+            //      "domainNameLabel": "deleteme-pubip001",
+            //      "fqdn": "deleteme-pubip001.southcentralus.cloudapp.azure.com"
+            //    }
+            //  }
+            //},
+            //{
+            //  "comments": "Generalized from resource: '/subscriptions/be4c9638-e57a-4393-a2c3-c604ccb0bb3a/resourceGroups/DNSTest_Cname_DELETEME/providers/Microsoft.Network/publicIPAddresses/deleteme.pubip'.",
+            //  "type": "Microsoft.Network/publicIPAddresses",
+            //  "sku": {
+            //    "name": "Basic",
+            //    "tier": "Regional"
+            //  },
+            //  "name": "[parameters('publicIPAddresses_pubip002_name')]",
+            //  "apiVersion": "2018-08-01",
+            //  "location": "southcentralus",
+            //  "scale": null,
+            //  "properties": {
+            //    "provisioningState": "Succeeded",
+            //    "resourceGuid": "15d0e711-65cd-458e-ae59-57ff95b02ce7",
+            //    "publicIPAddressVersion": "IPv4",
+            //    "publicIPAllocationMethod": "Dynamic",
+            //    "idleTimeoutInMinutes": 4,
+            //    "dnsSettings": {
+            //      "domainNameLabel": "deleteme-pubip002",
+            //      "fqdn": "deleteme-pubip002.southcentralus.cloudapp.azure.com"
+            //    }
+            //  }
+            //},
+            // Next: Add an EndPoint to a Traffic Manager
+            {
+              "apiVersion": "2018-04-01",
+              "type": "Microsoft.Network/trafficmanagerprofiles",
+              "name": "[parameters('trafficManagerName')]",
+              "location": "global",
+              "properties": {
+                "trafficRoutingMethod": "[parameters('trafficRoutingMethod')]",
+                "maxReturn": "[parameters('maxReturn')]",
+                "dnsConfig": {
+                  "relativeName": "[parameters('relativeName')]",
+                  "ttl": "60"
+                },
+                "monitorConfig": {
+                  "protocol": "http",
+                  "port": "80",
+                  "path": "/"
+                },
+                "endpoints": [
+                  {
+                    // EndPoint ties into 'publicIPAddressRender0'
+                    "id": "[concat(parameters('trafficManagerProfiles_id'), parameters('endpoint_name001'))]",
+                    "name": "[parameters('endpoint_name001')]",
+                    "type": "Microsoft.Network/trafficManagerProfiles/azureEndpoints",
+                    "properties": {
+                      "endpointStatus": "Enabled",
+                      "endpointMonitorStatus": null,
+                      "targetResourceId": "[resourceId(parameters('rgRender'), 'Microsoft.Network/publicIPAddresses', variables('publicIPAddressRender0'))]",
+                      "target": "[concat(parameters('trafficManagerName'), variables('publicIPAddressRender0'), '.southcentralus.cloudapp.azure.com')]",
+                      "weight": 1,
+                      "priority": 1,
+                      "endpointLocation": "South Central US"
+                    }
+                  },
+                  {
+                    // EndPoint ties into 'publicIPAddressAnnotate0'
+                    "id": "[concat(parameters('trafficManagerProfiles_id'), parameters('endpoint_name002'))]",
+                    "name": "[parameters('endpoint_name002')]",
+                    "type": "Microsoft.Network/trafficManagerProfiles/azureEndpoints",
+                    "properties": {
+                      "endpointStatus": "Enabled",
+                      "endpointMonitorStatus": null,
+                      "targetResourceId": "[resourceId(parameters('rgRender'), 'Microsoft.Network/publicIPAddresses',  variables('publicIPAddressAnnotate0'))]",
+                      "target": "[concat(parameters('trafficManagerName'), variables('publicIPAddressAnnotate0'), '.southcentralus.cloudapp.azure.com')]",
+                      "weight": 1,
+                      "priority": 2,
+                      "endpointLocation": "South Central US"
+                    }
+                  }
+                ],
+                "trafficViewEnrollmentStatus": "Disabled"
+              },
+              "dependsOn": [
+              ]
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[concat('/subscriptions/be4c9638-e57a-4393-a2c3-c604ccb0bb3a/resourceGroups/deleteme-dev.render/providers/Microsoft.Network/publicIPAddresses/', concat(variables('publicIPAddressRender0')))]",
+        "[concat('/subscriptions/be4c9638-e57a-4393-a2c3-c604ccb0bb3a/resourceGroups/deleteme-dev.render/providers/Microsoft.Network/publicIPAddresses/', concat(variables('publicIPAddressAnnotate0')))]"
+      ]
+    },
+    //
+    // ORIGINAL 'sfcrndr.json' Resource are BELOW
+    //
+    {
+      "type": "Microsoft.Authorization/locks",
+      "apiVersion": "2015-01-01",
+      "name": "[concat(resourceGroup().name, 'opslock')]",
+      "properties": {
+        "level": "ReadOnly",
+        "notes": "WARNING: This resource is generated via ARM templates. You have no reason to modify or delete the configuration. Contact operations@lazlo.io for action on this resource. If you make an unauthorized change, you will be terminated for cause. No exceptions."
+      },
+      "dependsOn": [
+        "[concat('Microsoft.ServiceFabric/clusters/', variables('clusterName'))]",
+        "[concat('Microsoft.Compute/virtualMachineScaleSets/', variables('clusterName'), 'vmss', parameters('vmNodeType0Name'))]"
+      ]
+    },
     {
       "type": "Microsoft.Storage/storageAccounts",
       "sku": {
@@ -312,7 +657,7 @@
     },
     {
       "type": "Microsoft.Network/publicIPAddresses",
-      "name": "[concat(variables('publicIPAddressRender0'))]",
+      "name": "[variables('publicIPAddressRender0')]",
       "apiVersion": "[variables('publicIPApiVersion')]",
       "location": "[parameters('computeLocation')]",
       "tags": {
@@ -329,7 +674,7 @@
     },
     {
       "type": "Microsoft.Network/publicIPAddresses",
-      "name": "[concat(variables('publicIPAddressAnnotate0'))]",
+      "name": "[variables('publicIPAddressAnnotate0')]",
       "apiVersion": "[variables('publicIPApiVersion')]",
       "location": "[parameters('computeLocation')]",
       "tags": {
