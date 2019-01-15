@@ -148,7 +148,7 @@
                 }
               }
             }
-          ],
+          ]
           //"outputs": {
           //  "nestedCnameInfo": {
           //    "type": "object",
@@ -239,10 +239,10 @@
             }
           ]
         }
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'nestedCnameTemplate')]"
-      ]
+      }
+      //"dependsOn": [
+      //  "[resourceId('Microsoft.Resources/deployments', 'nestedCnameTemplate')]"
+      //]
     },
     //
     // ORIGINAL 'sfcrndr.json' Resource are BELOW
@@ -835,7 +835,7 @@
     "clusterProperties": {
       "type": "object",
       "value": "[reference(variables('clusterName'))]"
-    },
+    }
     //"documentEndpoint": {
     //  "type": "string",
     //  "value": "[reference(variables('resourceId'), variables('apiVersion')).documentEndpoint]"
